@@ -26,12 +26,12 @@ const LoginForm = () => {
     <SafeAreaView>
       <Text>{email}</Text>
       <TextInput style={styles.input} placeholder='Email' onChangeText={setEmail} value={email} />
-      <Text>{password}</Text>
       <TextInput
         style={styles.input}
         placeholder='Password'
         onChangeText={setPassword}
         value={password}
+        secureTextEntry={true}
       />
       <Button title='Login' onPress={login} />
     </SafeAreaView>

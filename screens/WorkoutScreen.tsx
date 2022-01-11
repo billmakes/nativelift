@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, FlatList } from 'react-native'
+import { Button, FlatList, StyleSheet } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 import { WorkoutService } from '../services/WorkoutService'
 import { ExerciseService } from '../services/ExerciseService'
@@ -7,6 +7,7 @@ import IWorkoutData from '../types/Workout'
 import IExerciseData from '../types/Exercise'
 import { Text, View } from '../components/Themed'
 import ExerciseCard from '../components/ExerciseCard'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 function WorkoutScreen({ route, navigation }: any) {
   const isFocused = useIsFocused()
@@ -91,7 +92,7 @@ function WorkoutScreen({ route, navigation }: any) {
 
   if (workout) {
     return (
-        <View>
+        <SafeAreaView style={styles.container}>
           <View>
             <Text>{new Date(workout.created_at).toLocaleDateString()}</Text>
             <Text>{workout.in_progress ? 'IN PROGRESS' : 'NOT IN PROGRESS'}</Text>
@@ -119,11 +120,24 @@ function WorkoutScreen({ route, navigation }: any) {
               disabled={!workout.in_progress}
             />
           </View>
-        </View>
+        </SafeAreaView>
     )
   } else {
     return <Text>Loading</Text>
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+})
 
 export default WorkoutScreen

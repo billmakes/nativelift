@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Button, StyleSheet, FlatList } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import Card from './Card'
 import { Text, View } from './Themed'
 import IWorkoutData from '../types/Workout'
 import IExerciseData from '../types/Exercise'
@@ -13,14 +14,22 @@ function WorkoutCard(props: IWorkoutData) {
   const { exercises } = props
   const navigation = useNavigation()
   return (
-    <View style={styles.cardContainer}>
-      <Text>Workout</Text>
-      <View>
-        <Text>{new Date(props.created_at).toLocaleDateString()}</Text>
-        <Text>{props.id}</Text>
-        <Text>{props.in_progress ? 'in progress' : 'not started'}</Text>
-        <View>
-          <View>
+    <View style={{ marginBottom: 10 }}>
+      <Card
+        header={
+          <>
+            <View>
+              <Text>{new Date(props.created_at).toLocaleDateString()}</Text>
+              <Text>{props.in_progress ? 'in progress' : 'finished'}</Text>
+            </View>
+            <Button
+              title='Details'
+              onPress={() => navigation.navigate('WorkoutScreen', { id: props.id })}
+            />
+          </>
+        }
+        body={
+          <>
             {exercises.length ? (
               <FlatList
                 data={exercises}
@@ -28,21 +37,11 @@ function WorkoutCard(props: IWorkoutData) {
                 renderItem={({ item }) => <Exercises {...item} />}
               />
             ) : null}
-          </View>
-          <Button
-            title='Details'
-            onPress={() => navigation.navigate('WorkoutScreen', { id: props.id })}
-          />
-        </View>
-      </View>
+          </>
+        }
+      />
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  cardContainer: {
-    display: 'flex',
-  },
-})
 
 export default WorkoutCard

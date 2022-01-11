@@ -81,6 +81,7 @@ function BottomTabNavigator() {
           name='Home'
           component={HomeScreen}
           options={{
+            tabBarIcon: ({ color }) => <TabBarIcon name='home' color={color} />,
             title: 'Home',
           }}
         />
@@ -91,7 +92,7 @@ function BottomTabNavigator() {
           component={HistoryScreen}
           options={({ navigation }: RootTabScreenProps<'History'>) => ({
             title: 'History',
-            tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
+            tabBarIcon: ({ color }) => <TabBarIcon name='area-chart' color={color} />,
             headerRight: () => (
               <Pressable
                 onPress={() => navigation.navigate('Modal')}
@@ -115,7 +116,7 @@ function BottomTabNavigator() {
         component={SettingsScreen}
         options={{
           title: auth ? 'Settings' : 'Login',
-          tabBarIcon: ({ color }) => <TabBarIcon name='code' color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name='gear' color={color} />,
         }}
       />
     </BottomTab.Navigator>

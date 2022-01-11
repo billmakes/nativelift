@@ -4,6 +4,7 @@ import { Button, StyleSheet, View, Text, TextInput } from 'react-native'
 import { useRoute } from '@react-navigation/native'
 import { ExerciseService, ExerciseOptions } from '../services/ExerciseService'
 import IExerciseData from '../types/Exercise'
+import Card from './Card'
 import Checkbox from './Checkbox'
 
 type ActionType = {
@@ -98,84 +99,93 @@ export default function ExerciseCard(props: PropTypes) {
 
   const CardEditing = () => {
     return (
-      <View>
-        <Text>editing</Text>
-        <Text style={styles.header}>Label</Text>
-        <TextInput
-          style={styles.input}
-          placeholder='Exercise label'
-          onChangeText={(e) => dispatch({ type: 'setLabel', payload: e })}
-          value={formState.label}
-        />
-        <Text style={styles.header}>Weight</Text>
-        <View style={styles.editInputContainer}>
-          <Button
-            title='-'
-            onPress={() => dispatch({ type: 'setWeight', payload: formState.weight - 5 })}
-          />
-          <Text>{formState.weight}</Text>
-          <Button
-            title='+'
-            onPress={() => dispatch({ type: 'setWeight', payload: formState.weight + 5 })}
-          />
-        </View>
-        <Text style={styles.header}>Sets</Text>
-        <View style={styles.editInputContainer}>
-          <Button
-            title='-'
-            onPress={() => dispatch({ type: 'setSets', payload: formState.sets - 1 })}
-            disabled={formState.sets === 1}
-          />
-          <Text>{formState.sets}</Text>
-          <Button
-            title='+'
-            onPress={() => dispatch({ type: 'setSets', payload: formState.sets + 1 })}
-          />
-        </View>
-        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Button title='Done' onPress={editExerciseHandler} />
-          <Button title='Delete' onPress={() => handleDelete(exercise.id)} />
-        </View>
-      </View>
+      <Card
+        header={
+          <>
+            <Button title='Delete' onPress={() => handleDelete(exercise.id)} />
+            <Button title='Done' onPress={editExerciseHandler} />
+          </>
+        }
+        body={
+          <>
+            <Text style={styles.header}>Label</Text>
+            <TextInput
+              style={styles.input}
+              placeholder='Exercise label'
+              onChangeText={(e) => dispatch({ type: 'setLabel', payload: e })}
+              value={formState.label}
+            />
+            <Text style={styles.header}>Weight</Text>
+            <View style={styles.editInputContainer}>
+              <Button
+                title='-'
+                onPress={() => dispatch({ type: 'setWeight', payload: formState.weight - 5 })}
+              />
+              <Text>{formState.weight}</Text>
+              <Button
+                title='+'
+                onPress={() => dispatch({ type: 'setWeight', payload: formState.weight + 5 })}
+              />
+            </View>
+            <Text style={styles.header}>Sets</Text>
+            <View style={styles.editInputContainer}>
+              <Button
+                title='-'
+                onPress={() => dispatch({ type: 'setSets', payload: formState.sets - 1 })}
+                disabled={formState.sets === 1}
+              />
+              <Text>{formState.sets}</Text>
+              <Button
+                title='+'
+                onPress={() => dispatch({ type: 'setSets', payload: formState.sets + 1 })}
+              />
+            </View>
+            <View
+              style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}
+            ></View>
+          </>
+        }
+      />
     )
   }
 
   const CardBody = () => {
     return (
       <View>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Text style={styles.header}>{exerciseState.label}</Text>
-          <Button title={editing ? 'Save' : 'Edit'} onPress={editExerciseHandler} />
-        </View>
-        <Text style={styles.header}>Weight: {exerciseState.weight}lbs</Text>
-        <Text>{completed ? 'done' : ''}</Text>
-        <View style={styles.checkboxContainer}>
-          {sets.map((set) => (
-            <Checkbox
-              key={set.key}
-              style={styles.checkbox}
-              value={set.checked}
-              onChange={(val: boolean) => {
-                set.checked = val
-                setSets([...sets])
-                computeCompleted()
-              }}
-              disabled={exercise.disabled}
-            />
-          ))}
-        </View>
+        <Card
+          header={
+            <>
+              <Text style={styles.header}>{exerciseState.label}</Text>
+              <Button title={editing ? 'Save' : 'Edit'} onPress={editExerciseHandler} />
+            </>
+          }
+          body={
+            <>
+              <Text style={styles.header}>{exerciseState.weight}lbs</Text>
+              <Text>{completed ? 'done' : ''}</Text>
+              <View style={styles.checkboxContainer}>
+                {sets.map((set) => (
+                  <Checkbox
+                    key={set.key}
+                    style={styles.checkbox}
+                    value={set.checked}
+                    onChange={(val: boolean) => {
+                      set.checked = val
+                      setSets([...sets])
+                      computeCompleted()
+                    }}
+                    disabled={exercise.disabled}
+                  />
+                ))}
+              </View>
+            </>
+          }
+        />
       </View>
     )
   }
 
-  return editing ? CardEditing() : CardBody()
+  return <View style={{ marginBottom: 10 }}>{editing ? CardEditing() : CardBody()}</View>
 }
 
 const styles = StyleSheet.create({
