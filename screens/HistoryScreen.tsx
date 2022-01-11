@@ -1,8 +1,7 @@
 import React from 'react'
 import { StyleSheet, SafeAreaView, FlatList } from 'react-native'
 
-import EditScreenInfo from '../components/EditScreenInfo'
-import { Text, View } from '../components/Themed'
+import { View } from '../components/Themed'
 import { RootTabScreenProps } from '../types'
 
 import WorkoutCard from '../components/WorkoutCard'
@@ -24,18 +23,18 @@ const Workouts = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {workouts.length && (
+      {workouts.length ? (
         <FlatList
           data={workouts}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <WorkoutCard {...item} />}
         />
-      )}
+      ) : null}
     </SafeAreaView>
   )
 }
 
-export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
+export default function History({ navigation }: RootTabScreenProps<'History'>) {
   return (
     <View style={styles.container}>
       <Workouts />

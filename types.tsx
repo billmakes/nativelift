@@ -17,6 +17,7 @@ export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined
   Loading: undefined
   Modal: undefined
+  AddExerciseModal: undefined
   NotFound: undefined
   History: undefined
   WorkoutScreen: { id: string }
@@ -28,6 +29,7 @@ export type RootStackScreenProps<Screen extends keyof RootStackParamList> = Nati
 >
 
 export type RootTabParamList = {
+  Home: undefined
   History: undefined
   Settings: undefined
 }

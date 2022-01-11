@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native'
 import { Text, View } from '../components/Themed'
 
 import { RootStackScreenProps } from '../types'
@@ -20,7 +20,7 @@ export default function LoadingScreen({
     if (!token && !auth) {
       navigate('Root', { screen: 'Settings' })
     } else {
-      navigate('Root', { screen: 'History' })
+      navigate('Root', { screen: 'Home' })
     }
   }
 
@@ -28,7 +28,7 @@ export default function LoadingScreen({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Loading!!!</Text>
+      <ActivityIndicator size='large' />
     </View>
   )
 }
@@ -39,17 +39,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
-  },
-  linkText: {
-    fontSize: 14,
-    color: '#2e78b7',
   },
 })

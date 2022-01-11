@@ -8,13 +8,15 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import * as React from 'react'
-import { ColorSchemeName, Pressable } from 'react-native'
+import { ColorSchemeName, View, Pressable } from 'react-native'
 
 import Colors from '../constants/Colors'
 import useColorScheme from '../hooks/useColorScheme'
 import LoadingScreen from '../screens/LoadingScreen'
+import AddExerciseModalScreen from '../screens/AddExerciseModalScreen'
 import ModalScreen from '../screens/ModalScreen'
 import NotFoundScreen from '../screens/NotFoundScreen'
+import HomeScreen from '../screens/HomeScreen'
 import HistoryScreen from '../screens/HistoryScreen'
 import SettingsScreen from '../screens/SettingsScreen'
 import WorkoutScreen from '../screens/WorkoutScreen'
@@ -49,6 +51,7 @@ function RootNavigator() {
       <Stack.Screen name='WorkoutScreen' component={WorkoutScreen} options={{ title: '' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name='Modal' component={ModalScreen} />
+        <Stack.Screen name='AddExerciseModal' component={AddExerciseModalScreen} />
       </Stack.Group>
     </Stack.Navigator>
   )
@@ -73,7 +76,16 @@ function BottomTabNavigator() {
         tabBarActiveTintColor: Colors[colorScheme].tint,
       }}
     >
-      {auth && (
+      {auth ? (
+        <BottomTab.Screen
+          name='Home'
+          component={HomeScreen}
+          options={{
+            title: 'Home',
+          }}
+        />
+      ) : null}
+      {auth ? (
         <BottomTab.Screen
           name='History'
           component={HistoryScreen}
@@ -97,7 +109,7 @@ function BottomTabNavigator() {
             ),
           })}
         />
-      )}
+      ) : null}
       <BottomTab.Screen
         name='Settings'
         component={SettingsScreen}

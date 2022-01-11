@@ -28,15 +28,15 @@ export default function Checkbox(props: CheckboxProps) {
       onPress={onCheckmarkPress}
       disabled={!!props.disabled}
     >
-      {checked && <Ionicons name='checkmark' size={24} color='white' />}
+      {checked ? <Ionicons name='checkmark' size={24} color='white' /> : null}
     </Pressable>
   )
 }
 
 const styles = StyleSheet.create({
   checkboxBase: {
-    width: 32,
-    height: 32,
+    width: 48,
+    height: 48,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 4,

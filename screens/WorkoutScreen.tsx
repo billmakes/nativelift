@@ -1,6 +1,6 @@
 import React from 'react'
-import { StyleSheet, SafeAreaView } from 'react-native'
-import { Button, Pressable } from 'react-native'
+import { Button, FlatList } from 'react-native'
+import { useIsFocused } from '@react-navigation/native'
 import { WorkoutService } from '../services/WorkoutService'
 import { ExerciseService } from '../services/ExerciseService'
 import IWorkoutData from '../types/Workout'
@@ -9,17 +9,34 @@ import { Text, View } from '../components/Themed'
 import ExerciseCard from '../components/ExerciseCard'
 
 function WorkoutScreen({ route, navigation }: any) {
+  const isFocused = useIsFocused()
   const { id } = route.params
   const [workout, setWorkout] = React.useState<IWorkoutData>()
   const [exercises, setExercises] = React.useState<Array<IExerciseData>>([])
 
   React.useEffect(() => {
     fetchData()
-  }, [])
+  }, [isFocused, workout?.in_progress])
 
   const fetchData = () => {
     getWorkout()
     getExercises()
+  }
+
+  const updateWorkout = () => {
+    if (workout && workout.in_progress) {
+      WorkoutService.completeWorkout(id).then(() => {
+        setWorkout({ ...workout, in_progress: false })
+        navigateHome()
+      })
+    } else {
+      WorkoutService.resumeWorkout(id).then(() => {
+        if (workout) {
+          setWorkout({ ...workout, in_progress: true })
+        }
+      })
+    }
+    console.log('WORKOUT: ', workout)
   }
 
   const getWorkout = () => {
@@ -33,7 +50,7 @@ function WorkoutScreen({ route, navigation }: any) {
           <View style={{ margin: 5 }}>
             <Button
               title={res.data.workout.in_progress ? 'Complete' : 'Edit'}
-              onPress={() => console.log('finish/resume workout')}
+              onPress={() => updateWorkout()}
             />
           </View>
         ),
@@ -50,68 +67,63 @@ function WorkoutScreen({ route, navigation }: any) {
     })
   }
 
-  const updateWorkout = () => {
-    if (workout && workout.in_progress) {
-      WorkoutService.completeWorkout(id).then(() => {
-        setWorkout({ ...workout, in_progress: !workout.in_progress })
-        // routeWorkouts()
+  const deleteExercise = (id: string) => {
+    if (route?.params?.id)
+      ExerciseService.deleteExercise(route.params.id, id).then(() => {
+        setExercises(exercises.filter((e) => e.id !== id))
       })
-    } else {
-      WorkoutService.resumeWorkout(id).then(() => {
-        if (workout) {
-          setWorkout({ ...workout, in_progress: !workout.in_progress })
-        }
-      })
-    }
   }
+
+  const navigateHome = () => {
+    navigation.navigate('Home')
+  }
+
+  const navigateAddExerciseModal = () => {
+    navigation.navigate('AddExerciseModal', { id })
+  }
+
 
   const deleteWorkout = () => {
     WorkoutService.deleteWorkout(id).then(() => {
-      //routeWorkouts()
+      navigateHome()
     })
   }
 
   if (workout) {
     return (
-      <SafeAreaView style={styles.container}>
-        <div>
-          <div className='d-flex justify-content-between align-items-center mb-2'>
-            <h5>{new Date(workout.created_at).toLocaleDateString()}</h5>
-            <h5>{workout.in_progress ? 'IN PROGRESS' : 'NOT IN PROGRESS'}</h5>
+        <View>
+          <View>
+            <Text>{new Date(workout.created_at).toLocaleDateString()}</Text>
+            <Text>{workout.in_progress ? 'IN PROGRESS' : 'NOT IN PROGRESS'}</Text>
             <Button
               title='Add Exercise'
-              onPress={() => console.log('route to add exercise')}
+              onPress={navigateAddExerciseModal}
               disabled={!workout.in_progress}
             />
-          </div>
-          <ul className='list-group'>
-            {exercises &&
-              exercises.map((exercise, index) => (
-                <li key={index}>
-                  <ExerciseCard {...exercise} />
-                </li>
-              ))}
-          </ul>
-          <div className='d-flex justify-content-center'>
+          </View>
+          <View>
+            {exercises.length ? (
+              <FlatList
+                data={exercises}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                  <ExerciseCard exercise={item} handleDelete={deleteExercise} />
+                )}
+              />
+            ) : null}
+          </View>
+          <View>
             <Button
-              title='Delete Exercise'
-              onPress={() => console.log('delete exercise')}
+              title='Delete Workout'
+              onPress={deleteWorkout}
               disabled={!workout.in_progress}
             />
-          </div>
-        </div>
-      </SafeAreaView>
+          </View>
+        </View>
     )
   } else {
-    return <h1>Error</h1>
+    return <Text>Loading</Text>
   }
 }
 
 export default WorkoutScreen
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
