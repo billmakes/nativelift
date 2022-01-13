@@ -5,6 +5,7 @@ import { useRoute } from '@react-navigation/native'
 import { ExerciseService, ExerciseOptions } from '../services/ExerciseService'
 import IExerciseData from '../types/Exercise'
 import Card from './Card'
+import ReduceIncrease from './ReduceIncrease'
 import Checkbox from './Checkbox'
 
 type ActionType = {
@@ -101,10 +102,10 @@ export default function ExerciseCard(props: PropTypes) {
     return (
       <Card
         header={
-          <>
+          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
             <Button title='Delete' onPress={() => handleDelete(exercise.id)} />
             <Button title='Done' onPress={editExerciseHandler} />
-          </>
+          </View>
         }
         body={
           <>
@@ -116,30 +117,17 @@ export default function ExerciseCard(props: PropTypes) {
               value={formState.label}
             />
             <Text style={styles.header}>Weight</Text>
-            <View style={styles.editInputContainer}>
-              <Button
-                title='-'
-                onPress={() => dispatch({ type: 'setWeight', payload: formState.weight - 5 })}
-              />
-              <Text>{formState.weight}</Text>
-              <Button
-                title='+'
-                onPress={() => dispatch({ type: 'setWeight', payload: formState.weight + 5 })}
-              />
-            </View>
+            <ReduceIncrease
+              reduce={() => dispatch({ type: 'setWeight', payload: formState.weight - 5 })}
+              increase={() => dispatch({ type: 'setWeight', payload: formState.weight + 5 })}
+              value={formState.weight}
+            />
             <Text style={styles.header}>Sets</Text>
-            <View style={styles.editInputContainer}>
-              <Button
-                title='-'
-                onPress={() => dispatch({ type: 'setSets', payload: formState.sets - 1 })}
-                disabled={formState.sets === 1}
-              />
-              <Text>{formState.sets}</Text>
-              <Button
-                title='+'
-                onPress={() => dispatch({ type: 'setSets', payload: formState.sets + 1 })}
-              />
-            </View>
+            <ReduceIncrease
+              reduce={() => dispatch({ type: 'setSets', payload: formState.sets - 1 })}
+              increase={() => dispatch({ type: 'setSets', payload: formState.sets + 1 })}
+              value={formState.sets}
+            />
             <View
               style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}
             ></View>

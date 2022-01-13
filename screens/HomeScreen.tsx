@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { Button, StyleSheet, SafeAreaView, FlatList } from 'react-native'
-import { Text, View } from '../components/Themed'
+import { Button, StyleSheet, SafeAreaView, FlatList, Text, View } from 'react-native'
 import { useNavigation, useIsFocused } from '@react-navigation/native'
 import WorkoutCard from '../components/WorkoutCard'
 import { WorkoutService } from '../services/WorkoutService'
@@ -63,9 +62,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
   },
   title: {
     fontSize: 20,

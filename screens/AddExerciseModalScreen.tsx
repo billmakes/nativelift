@@ -5,6 +5,8 @@ import { Button, Platform, StyleSheet, TextInput } from 'react-native'
 
 import { Text, View } from '../components/Themed'
 import { ExerciseService, ExerciseOptions } from '../services/ExerciseService'
+import Card from '../components/Card'
+import ReduceIncrease from '../components/ReduceIncrease'
 
 type ActionType = {
   type: string
@@ -48,47 +50,47 @@ export default function AddExerciseModalScreen({ navigation, route }: any) {
       })
   }
 
-  function CardEditing() {
+  const CardEditing = () => {
     return (
-      <View>
-        <Text>editing</Text>
-        <Button title='Save' onPress={addExercise} />
-        <TextInput
-          style={styles.input}
-          placeholder='Exercise label'
-          onChangeText={(e) => dispatch({ type: 'setLabel', payload: e })}
-          value={formState.label}
-        />
-        <View>
-          <Button
-            title='-'
-            onPress={() => dispatch({ type: 'setWeight', payload: formState.weight - 5 })}
-          />
-          <Text>Weight: {formState.weight}</Text>
-          <Button
-            title='+'
-            onPress={() => dispatch({ type: 'setWeight', payload: formState.weight + 5 })}
-          />
-        </View>
-        <View>
-          <Button
-            title='-'
-            onPress={() => dispatch({ type: 'setSets', payload: formState.sets - 1 })}
-            disabled={formState.sets === 1}
-          />
-          <Text>Sets: {formState.sets}</Text>
-          <Button
-            title='+'
-            onPress={() => dispatch({ type: 'setSets', payload: formState.sets + 1 })}
-          />
-        </View>
-      </View>
+      <Card
+        header={
+          <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Button title='Done' onPress={addExercise} />
+          </View>
+        }
+        body={
+          <>
+            <Text style={styles.header}>Label</Text>
+            <TextInput
+              style={styles.input}
+              placeholder='Exercise label'
+              onChangeText={(e) => dispatch({ type: 'setLabel', payload: e })}
+              value={formState.label}
+            />
+            <Text style={styles.header}>Weight</Text>
+            <ReduceIncrease
+              reduce={() => dispatch({ type: 'setWeight', payload: formState.weight - 5 })}
+              increase={() => dispatch({ type: 'setWeight', payload: formState.weight + 5 })}
+              value={formState.weight}
+            />
+            <Text style={styles.header}>Sets</Text>
+            <ReduceIncrease
+              reduce={() => dispatch({ type: 'setSets', payload: formState.sets - 1 })}
+              increase={() => dispatch({ type: 'setSets', payload: formState.sets + 1 })}
+              value={formState.sets}
+            />
+            <View
+              style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}
+            ></View>
+          </>
+        }
+      />
     )
   }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>TESTING</Text>
-      { CardEditing() }
+      {CardEditing()}
       {/* Use a light status bar on iOS to account for the black space above the modal */}
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </View>
@@ -102,6 +104,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  header: {
     fontSize: 20,
     fontWeight: 'bold',
   },

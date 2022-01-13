@@ -1,11 +1,10 @@
 import React from 'react'
-import { Button, FlatList, StyleSheet } from 'react-native'
+import { Button, Text, View, FlatList, StyleSheet } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 import { WorkoutService } from '../services/WorkoutService'
 import { ExerciseService } from '../services/ExerciseService'
 import IWorkoutData from '../types/Workout'
 import IExerciseData from '../types/Exercise'
-import { Text, View } from '../components/Themed'
 import ExerciseCard from '../components/ExerciseCard'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -37,12 +36,10 @@ function WorkoutScreen({ route, navigation }: any) {
         }
       })
     }
-    console.log('WORKOUT: ', workout)
   }
 
   const getWorkout = () => {
     WorkoutService.getOne(id).then((res: any) => {
-      console.log(res.data)
       setWorkout(res.data.workout)
       navigation.setOptions({
         title: new Date(res?.data?.workout?.created_at).toLocaleDateString(),
@@ -50,7 +47,7 @@ function WorkoutScreen({ route, navigation }: any) {
         headerRight: () => (
           <View style={{ margin: 5 }}>
             <Button
-              title={res.data.workout.in_progress ? 'Complete' : 'Edit'}
+              title={res.data.workout.in_progress ? 'Finish' : 'Edit'}
               onPress={() => updateWorkout()}
             />
           </View>
@@ -62,7 +59,6 @@ function WorkoutScreen({ route, navigation }: any) {
 
   const getExercises = () => {
     ExerciseService.getAll(id).then((res: any) => {
-      console.log(res.data)
       setExercises(res.data.exercises)
       return res.data.exercises
     })
@@ -83,16 +79,16 @@ function WorkoutScreen({ route, navigation }: any) {
     navigation.navigate('AddExerciseModal', { id })
   }
 
-
   const deleteWorkout = () => {
     WorkoutService.deleteWorkout(id).then(() => {
       navigateHome()
     })
   }
 
-  if (workout) {
-    return (
-        <SafeAreaView style={styles.container}>
+  return (
+    <SafeAreaView style={styles.container}>
+      {workout ? (
+        <>
           <View>
             <Text>{new Date(workout.created_at).toLocaleDateString()}</Text>
             <Text>{workout.in_progress ? 'IN PROGRESS' : 'NOT IN PROGRESS'}</Text>
@@ -120,19 +116,17 @@ function WorkoutScreen({ route, navigation }: any) {
               disabled={!workout.in_progress}
             />
           </View>
-        </SafeAreaView>
-    )
-  } else {
-    return <Text>Loading</Text>
-  }
+        </>
+      ) : (
+        <Text>Loading</Text>
+      )}
+    </SafeAreaView>
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
   },
   title: {
     fontSize: 20,

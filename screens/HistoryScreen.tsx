@@ -1,7 +1,6 @@
 import React from 'react'
-import { StyleSheet, SafeAreaView, FlatList } from 'react-native'
+import { StyleSheet, SafeAreaView, FlatList, View } from 'react-native'
 
-import { View } from '../components/Themed'
 import { RootTabScreenProps } from '../types'
 
 import WorkoutCard from '../components/WorkoutCard'
